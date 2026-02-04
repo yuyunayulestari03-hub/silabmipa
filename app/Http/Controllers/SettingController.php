@@ -26,8 +26,16 @@ class SettingController extends Controller
         }
 
         $request->validate([
+            'app_name' => 'nullable|string|max:255',
             'app_logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
+
+        if ($request->filled('app_name')) {
+            Setting::updateOrCreate(
+                ['key' => 'app_name'],
+                ['value' => $request->app_name]
+            );
+        }
 
         if ($request->hasFile('app_logo')) {
             $path = $request->file('app_logo')->store('public/settings');

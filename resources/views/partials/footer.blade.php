@@ -1,3 +1,3 @@
 <footer class="footer">
-  © {{ date('Y') }} SILAB MIPA — Sistem Informasi Laboratorium IPA
+  © {{ date('Y') }} {{ $appName }} — Sistem Informasi Laboratorium IPA
 </footer>

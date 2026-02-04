@@ -13,6 +13,13 @@
         @method('PUT')
         
         <div style="margin-bottom: 24px;">
+            <label style="display: block; margin-bottom: 8px; font-weight: 500; color: var(--text);">Nama Website</label>
+            <input type="text" name="app_name" class="form-control" 
+                style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 6px; background: var(--bg); color: var(--text);"
+                value="{{ $settings['app_name'] ?? 'SILAB MIPA' }}" placeholder="Masukkan nama website">
+        </div>
+
+        <div style="margin-bottom: 24px;">
             <label style="display: block; margin-bottom: 8px; font-weight: 500; color: var(--text);">Logo Website</label>
             
             @if(isset($settings['app_logo']))

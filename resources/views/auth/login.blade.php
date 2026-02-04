@@ -12,20 +12,11 @@
     <div class="login-card">
         <div class="login-header">
             <div style="margin-bottom: 1rem;">
-                @if(isset($appLogo) && strpos($appLogo, 'backend/img/logo.svg') === false)
-                    <img src="{{ asset($appLogo) }}" alt="Logo" style="height: 60px; width: auto;">
-                @else
-                    <!-- Default Logo placeholder or Icon -->
-                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M7 3h10l-1 3H8L7 3z"/>
-                        <path d="M5 6h14v12a2 2 0 01-2 2H7a2 2 0 01-2-2V6z"/>
-                        <path d="M16 13l-4 4-4-4"/>
-                        <path d="M12 17V13"/>
-                    </svg>
-                @endif
+                <!-- Logo -->
+                <img src="{{ asset($appLogo) }}" alt="Logo" style="max-height: 60px; width: auto;">
             </div>
             <h1>Selamat Datang</h1>
-            <p>LAB MIPA</p>
+            <p>{{ $appName }}</p>
         </div>
         
         <form action="{{ route('login') }}" method="POST">

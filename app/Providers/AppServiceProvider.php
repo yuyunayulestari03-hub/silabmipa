@@ -25,11 +25,17 @@ class AppServiceProvider extends ServiceProvider
         Schema::defaultStringLength(191);
 
         try {
-            $appLogo = Setting::where('key', 'app_logo')->value('value') ?? 'backend/img/logo.svg';
+            $settings = Setting::whereIn('key', ['app_logo', 'app_name'])->pluck('value', 'key');
+            
+            $appLogo = $settings['app_logo'] ?? 'backend/img/logo.svg';
+            $appName = $settings['app_name'] ?? 'SILAB MIPA';
+            
             View::share('appLogo', $appLogo);
+            View::share('appName', $appName);
         } catch (\Exception $e) {
             // Handle cases where table doesn't exist yet (during migration)
             View::share('appLogo', 'backend/img/logo.svg');
+            View::share('appName', 'SILAB MIPA');
         }
     }
 }

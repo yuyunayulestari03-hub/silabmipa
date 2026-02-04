@@ -6,7 +6,7 @@
   <div class="brand">
     <img src="{{ asset($appLogo) }}" alt="Logo" style="max-height: 40px; width: auto;">
     <div class="title">
-      <strong>SI LAB MIPA</strong>
+      <strong>{{ $appName }}</strong>
       <span>Laboratorium IPA</span>
     </div>
 
@@ -53,6 +53,8 @@
     @endif
     
     @if(auth()->user()->role === 'admin')
+    <div class="section">ADMINISTRATOR</div>
+    
     <a href="{{ route('users.index') }}" class="{{ request()->routeIs('users.*') ? 'active' : '' }}">
       <span class="icon">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
@@ -60,6 +62,15 @@
         </svg>
       </span>
       Manajemen User
+    </a>
+
+    <a href="{{ route('settings.index') }}" class="{{ request()->routeIs('settings.*') ? 'active' : '' }}">
+      <span class="icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
+          <path fill-rule="evenodd" d="M11.078 2.25c-.917 0-1.699.663-1.85 1.567L9.05 5.389c-.42.18-.813.39-1.18.636l-1.874-.986a1.875 1.875 0 0 0-2.463.926l-.859 1.874a1.875 1.875 0 0 0 .61 2.512l1.649 1.101c-.02.245-.035.495-.035.749s.015.504.035.749l-1.649 1.101a1.875 1.875 0 0 0-.61 2.512l.858 1.874c.44.96 1.581 1.374 2.463.926l1.874-.986c.367.246.76.456 1.18.636l.178 1.572c.15.904.933 1.567 1.85 1.567h1.875c.916 0 1.699-.663 1.85-1.567l.178-1.572c.42-.18.813-.39 1.18-.636l1.874.986a1.875 1.875 0 0 0 2.463-.926l.859-1.874a1.875 1.875 0 0 0-.61-2.512l-1.649-1.101c.02-.245.035-.495.035-.749s-.015-.504-.035-.749l1.649-1.101a1.875 1.875 0 0 0 .61-2.512l-.858-1.874a1.875 1.875 0 0 0-2.463-.926l-1.874.986a7.17 7.17 0 0 0-1.18-.636l-.178-1.572a1.875 1.875 0 0 0-1.85-1.567h-1.875ZM12 7.5a4.5 4.5 0 1 0 0 9 4.5 4.5 0 0 0 0-9Z" clip-rule="evenodd" />
+        </svg>
+      </span>
+      Pengaturan Website
     </a>
     @endif
 
