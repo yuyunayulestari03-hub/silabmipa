@@ -33,7 +33,6 @@
             <div class="form-group">
                 <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
                     <label class="form-label" for="password" style="margin-bottom: 0;">Password</label>
-                    <a href="#" style="font-size: 0.8rem; color: var(--muted);">Lupa Password?</a>
                 </div>
                 <input type="password" id="password" name="password" class="form-input" required placeholder="••••••••">
                 @error('password')
@@ -50,7 +49,7 @@
         </form>
 
         <div class="auth-links">
-            <p style="color: var(--muted); margin: 0;">Belum punya akun? <a href="#">Hubungi Admin</a></p>
+            <p style="color: var(--muted); margin: 0;">Belum punya akun? Hubungi Admin</p>
         </div>
     </div>
 

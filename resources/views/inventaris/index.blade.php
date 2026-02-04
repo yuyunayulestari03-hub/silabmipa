@@ -29,9 +29,7 @@
                     <th style="padding: 1rem; text-align: center; color: var(--text); font-weight: 600; border: 1px solid #000;">Jumlah Total</th>
                     <th style="padding: 1rem; text-align: center; color: var(--text); font-weight: 600; border: 1px solid #000;">Jumlah Tersedia</th>
                     <th style="padding: 1rem; text-align: center; color: var(--text); font-weight: 600; border: 1px solid #000;">Kondisi</th>
-                    @if(auth()->user()->role === 'admin')
                     <th style="padding: 1rem; text-align: center; color: var(--text); font-weight: 600; border: 1px solid #000;">Aksi</th>
-                    @endif
                 </tr>
             </thead>
             <tbody>
@@ -54,8 +52,8 @@
                         </span>
                         @endif
                     </td>
-                    @if(auth()->user()->role === 'admin')
                     <td style="padding: 1rem; text-align: center; border: 1px solid #000;">
+                        @if(auth()->user()->role === 'admin')
                         <div style="display: flex; justify-content: center; gap: 12px;">
                             <a href="{{ route('inventaris.edit', $item->id) }}" style="color: #f97316; text-decoration: none; display: inline-flex; align-items: center; justify-content: center;" title="Edit">
                                 <i class="fas fa-cog" style="font-size: 20px;"></i>
@@ -70,8 +68,16 @@
                                 @method('DELETE')
                             </form>
                         </div>
+                        @else
+                            @if($item->kondisi == 'baik' && $item->jumlah > 0)
+                            <button onclick="openPinjamModal({{ $item->id }}, '{{ $item->nama_barang }}', {{ $item->jumlah }})" class="btn btn-sm btn-primary" style="background: var(--primary); color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer;">
+                                Pinjam
+                            </button>
+                            @else
+                            <span style="color: var(--muted); font-size: 0.8rem;">Tidak Tersedia</span>
+                            @endif
+                        @endif
                     </td>
-                    @endif
                 </tr>
                 @endforeach
             </tbody>
@@ -85,8 +91,70 @@
     @endif
 </div>
 
+{{-- Modal Peminjaman --}}
+<div id="pinjamModal" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 50; justify-content: center; align-items: center;">
+    <div style="background: white; border-radius: 12px; padding: 2rem; width: 100%; max-width: 500px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); position: relative;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+            <h2 style="font-size: 1.5rem; font-weight: 700; color: var(--text);">Pinjam Barang</h2>
+            <button onclick="closePinjamModal()" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--muted);">&times;</button>
+        </div>
+
+        <form action="{{ route('peminjaman-inventaris.store') }}" method="POST">
+            @csrf
+            <input type="hidden" name="inventaris_id" id="pinjam_inventaris_id">
+            
+            <div style="margin-bottom: 1rem;">
+                <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Nama Barang</label>
+                <input type="text" id="pinjam_nama_barang" class="form-control" style="width: 100%; padding: 0.75rem; border: 1px solid #e2e8f0; border-radius: 6px; background: #f3f4f6;" readonly>
+            </div>
+
+            <div style="margin-bottom: 1rem;">
+                <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Jumlah (Maks: <span id="pinjam_max_qty">0</span>)</label>
+                <input type="number" name="jumlah" id="pinjam_jumlah" class="form-control" style="width: 100%; padding: 0.75rem; border: 1px solid #e2e8f0; border-radius: 6px;" min="1" required>
+            </div>
+
+            <div style="margin-bottom: 1rem;">
+                <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Tanggal Pinjam</label>
+                <input type="date" name="tanggal_pinjam" class="form-control" style="width: 100%; padding: 0.75rem; border: 1px solid #e2e8f0; border-radius: 6px;" value="{{ date('Y-m-d') }}" min="{{ date('Y-m-d') }}" required>
+            </div>
+
+            <div style="margin-bottom: 1rem;">
+                <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Tanggal Kembali (Rencana)</label>
+                <input type="date" name="tanggal_kembali" class="form-control" style="width: 100%; padding: 0.75rem; border: 1px solid #e2e8f0; border-radius: 6px;" min="{{ date('Y-m-d') }}">
+            </div>
+
+            <div style="margin-bottom: 1.5rem;">
+                <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Keterangan / Keperluan</label>
+                <textarea name="keterangan" class="form-control" style="width: 100%; padding: 0.75rem; border: 1px solid #e2e8f0; border-radius: 6px;" rows="3"></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="width: 100%; padding: 0.75rem; background: var(--primary); color: white; border: none; border-radius: 6px; font-weight: 600; cursor: pointer;">
+                Ajukan Peminjaman
+            </button>
+        </form>
+    </div>
+</div>
+
 @push('scripts')
 <script>
+    function openPinjamModal(id, name, maxQty) {
+        document.getElementById('pinjam_inventaris_id').value = id;
+        document.getElementById('pinjam_nama_barang').value = name;
+        document.getElementById('pinjam_max_qty').textContent = maxQty;
+        document.getElementById('pinjam_jumlah').max = maxQty;
+        document.getElementById('pinjamModal').style.display = 'flex';
+    }
+
+    function closePinjamModal() {
+        document.getElementById('pinjamModal').style.display = 'none';
+    }
+
+    // Close modal when clicking outside
+    document.getElementById('pinjamModal').addEventListener('click', function(e) {
+        if (e.target === this) {
+            closePinjamModal();
+        }
+    });
     function confirmDelete(id) {
         Swal.fire({
             title: 'Apakah Anda yakin?',

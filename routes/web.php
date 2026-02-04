@@ -37,12 +37,19 @@ Route::middleware(['auth'])->group(function () {
     Route::patch('/inventaris/{id}/kondisi', [InventarisController::class, 'updateKondisi'])->name('inventaris.update-kondisi');
     Route::delete('/inventaris/{id}', [InventarisController::class, 'destroy'])->name('inventaris.destroy');
 
-    // Peminjaman (Borrowing Actions)
+    // Peminjaman (Borrowing Actions for Rooms)
     Route::get('/peminjaman', [PeminjamanController::class, 'index'])->name('peminjaman.index');
     Route::get('/peminjaman/create', [PeminjamanController::class, 'create'])->name('peminjaman.create');
     Route::post('/peminjaman', [PeminjamanController::class, 'store'])->name('peminjaman.store');
     Route::patch('/peminjaman/{id}/approve', [PeminjamanController::class, 'approve'])->name('peminjaman.approve');
     Route::patch('/peminjaman/{id}/reject', [PeminjamanController::class, 'reject'])->name('peminjaman.reject');
+
+    // Peminjaman Inventaris (Tools/Materials)
+    Route::get('/peminjaman-inventaris', [App\Http\Controllers\PeminjamanInventarisController::class, 'index'])->name('peminjaman-inventaris.index');
+    Route::post('/peminjaman-inventaris', [App\Http\Controllers\PeminjamanInventarisController::class, 'store'])->name('peminjaman-inventaris.store');
+    Route::patch('/peminjaman-inventaris/{id}/approve', [App\Http\Controllers\PeminjamanInventarisController::class, 'approve'])->name('peminjaman-inventaris.approve');
+    Route::patch('/peminjaman-inventaris/{id}/reject', [App\Http\Controllers\PeminjamanInventarisController::class, 'reject'])->name('peminjaman-inventaris.reject');
+    Route::patch('/peminjaman-inventaris/{id}/return', [App\Http\Controllers\PeminjamanInventarisController::class, 'returnItem'])->name('peminjaman-inventaris.return');
     
     // Profile Settings
     Route::get('/profile/settings', [App\Http\Controllers\ProfileController::class, 'edit'])->name('profile.settings');

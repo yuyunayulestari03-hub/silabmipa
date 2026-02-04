@@ -8,12 +8,12 @@
         <h1 style="font-size: 1.8rem; font-weight: 700; color: var(--text);">Manajemen User</h1>
         <p style="color: var(--muted);">Kelola data pengguna sistem.</p>
     </div>
-    <a href="{{ route('users.create') }}" class="btn btn-primary" style="background: var(--primary); color: white; text-decoration: none; padding: 10px 20px; border-radius: 8px; display: inline-flex; align-items: center; gap: 8px;">
+    <button onclick="openCreateModal()" class="btn btn-primary" style="background: var(--primary); color: white; border: none; padding: 10px 20px; border-radius: 8px; display: inline-flex; align-items: center; gap: 8px; cursor: pointer;">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5" style="width: 20px; height: 20px;">
             <path d="M10.75 4.75a.75.75 0 0 0-1.5 0v4.5h-4.5a.75.75 0 0 0 0 1.5h4.5v4.5a.75.75 0 0 0 1.5 0v-4.5h4.5a.75.75 0 0 0 0-1.5h-4.5v-4.5Z" />
         </svg>
         Tambah User
-    </a>
+    </button>
 </div>
 
 @if(session('success'))
@@ -58,8 +58,8 @@
                             border-radius: 9999px; 
                             font-size: 0.875rem; 
                             font-weight: 500;
-                            background: {{ $user->role === 'admin' ? '#e0e7ff' : ($user->role === 'dosen' ? '#dcfce7' : '#fef9c3') }};
-                            color: {{ $user->role === 'admin' ? '#4338ca' : ($user->role === 'dosen' ? '#15803d' : '#a16207') }};
+                            background: {{ $user->role === 'admin' ? '#e0e7ff' : '#dcfce7' }};
+                            color: {{ $user->role === 'admin' ? '#4338ca' : '#15803d' }};
                         ">
                             {{ ucfirst($user->role) }}
                         </span>
@@ -67,12 +67,12 @@
                     <td style="padding: 16px; color: var(--muted);">{{ $user->created_at->format('d M Y') }}</td>
                     <td style="padding: 16px; text-align: right;">
                         <div style="display: inline-flex; gap: 8px;">
-                            <a href="{{ route('users.edit', $user) }}" style="color: var(--primary); padding: 4px;">
+                            <button onclick='openEditModal(@json($user))' style="background: none; border: none; cursor: pointer; color: var(--primary); padding: 4px;">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" style="width: 20px; height: 20px;">
                                     <path d="m5.433 13.917 1.262-3.155A4 4 0 0 1 7.58 9.42l6.92-6.918a2.121 2.121 0 0 1 3 3l-6.92 6.918c-.383.383-.84.685-1.343.886l-3.154 1.262a.5.5 0 0 1-.65-.65Z" />
                                     <path d="M3.5 5.75c0-.69.56-1.25 1.25-1.25H10A.75.75 0 0 0 10 3H4.75A2.75 2.75 0 0 0 2 5.75v9.5A2.75 2.75 0 0 0 4.75 18h9.5A2.75 2.75 0 0 0 17 15.25V10a.75.75 0 0 0-1.5 0v5.25c0 .69-.56 1.25-1.25 1.25h-9.5c-.69 0-1.25-.56-1.25-1.25v-9.5Z" />
                                 </svg>
-                            </a>
+                            </button>
                             <form action="{{ route('users.destroy', $user) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus user ini?')" style="display: inline;">
                                 @csrf
                                 @method('DELETE')
@@ -100,4 +100,204 @@
     </div>
     @endif
 </div>
+
+<!-- Create Modal -->
+<div id="createModal" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 50; justify-content: center; align-items: center;">
+    <div style="background: var(--panel); width: 100%; max-width: 500px; border-radius: 12px; padding: 24px; box-shadow: var(--shadow); max-height: 90vh; overflow-y: auto;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+            <h2 style="font-size: 1.5rem; font-weight: 700; color: var(--text); margin: 0;">Tambah User</h2>
+            <button onclick="closeCreateModal()" style="background: none; border: none; font-size: 1.5rem; color: var(--muted); cursor: pointer;">&times;</button>
+        </div>
+        
+        <form id="createForm" action="{{ route('users.store') }}" method="POST">
+            @csrf
+            <input type="hidden" name="form_type" value="create">
+            
+            <div style="margin-bottom: 16px;">
+                <label for="create_name" style="display: block; margin-bottom: 8px; font-weight: 500; color: var(--text);">Nama Lengkap</label>
+                <input type="text" id="create_name" name="name" value="{{ old('name') }}" required
+                    style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 8px; background: var(--bg); color: var(--text);">
+                @if(old('form_type') == 'create')
+                @error('name')
+                    <div style="color: #ef4444; font-size: 0.875rem; margin-top: 4px;">{{ $message }}</div>
+                @enderror
+                @endif
+            </div>
+
+            <div style="margin-bottom: 16px;">
+                <label for="create_email" style="display: block; margin-bottom: 8px; font-weight: 500; color: var(--text);">Email</label>
+                <input type="email" id="create_email" name="email" value="{{ old('email') }}" required
+                    style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 8px; background: var(--bg); color: var(--text);">
+                @if(old('form_type') == 'create')
+                @error('email')
+                    <div style="color: #ef4444; font-size: 0.875rem; margin-top: 4px;">{{ $message }}</div>
+                @enderror
+                @endif
+            </div>
+
+            <div style="margin-bottom: 16px;">
+                <label for="create_role" style="display: block; margin-bottom: 8px; font-weight: 500; color: var(--text);">Role</label>
+                <select id="create_role" name="role" required
+                    style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 8px; background: var(--bg); color: var(--text);">
+                    <option value="admin" {{ old('role') == 'admin' ? 'selected' : '' }}>Admin</option>
+                    <option value="user" {{ old('role', 'user') == 'user' ? 'selected' : '' }}>User</option>
+                </select>
+                @if(old('form_type') == 'create')
+                @error('role')
+                    <div style="color: #ef4444; font-size: 0.875rem; margin-top: 4px;">{{ $message }}</div>
+                @enderror
+                @endif
+            </div>
+
+            <div style="margin-bottom: 16px;">
+                <label for="create_password" style="display: block; margin-bottom: 8px; font-weight: 500; color: var(--text);">Password</label>
+                <input type="password" id="create_password" name="password" required
+                    style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 8px; background: var(--bg); color: var(--text);">
+                @if(old('form_type') == 'create')
+                @error('password')
+                    <div style="color: #ef4444; font-size: 0.875rem; margin-top: 4px;">{{ $message }}</div>
+                @enderror
+                @endif
+            </div>
+
+            <div style="margin-bottom: 24px;">
+                <label for="create_password_confirmation" style="display: block; margin-bottom: 8px; font-weight: 500; color: var(--text);">Konfirmasi Password</label>
+                <input type="password" id="create_password_confirmation" name="password_confirmation" required
+                    style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 8px; background: var(--bg); color: var(--text);">
+            </div>
+
+            <div style="display: flex; gap: 12px; justify-content: flex-end;">
+                <button type="button" onclick="closeCreateModal()" style="padding: 10px 20px; border-radius: 8px; border: 1px solid var(--border); background: var(--panel-2); color: var(--text); cursor: pointer;">Batal</button>
+                <button type="submit" style="padding: 10px 20px; border-radius: 8px; border: none; background: var(--primary); color: white; cursor: pointer;">Simpan User</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Edit Modal -->
+<div id="editModal" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 50; justify-content: center; align-items: center;">
+    <div style="background: var(--panel); width: 100%; max-width: 500px; border-radius: 12px; padding: 24px; box-shadow: var(--shadow); max-height: 90vh; overflow-y: auto;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+            <h2 style="font-size: 1.5rem; font-weight: 700; color: var(--text); margin: 0;">Edit User</h2>
+            <button onclick="closeEditModal()" style="background: none; border: none; font-size: 1.5rem; color: var(--muted); cursor: pointer;">&times;</button>
+        </div>
+        
+        <form id="editForm" method="POST">
+            @csrf
+            @method('PUT')
+            <input type="hidden" name="form_type" value="edit">
+            <input type="hidden" name="user_id" id="edit_user_id" value="{{ old('user_id') }}">
+            
+            <div style="margin-bottom: 16px;">
+                <label for="edit_name" style="display: block; margin-bottom: 8px; font-weight: 500; color: var(--text);">Nama Lengkap</label>
+                <input type="text" id="edit_name" name="name" value="{{ old('name') }}" required
+                    style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 8px; background: var(--bg); color: var(--text);">
+                @if(old('form_type') == 'edit')
+                @error('name')
+                    <div style="color: #ef4444; font-size: 0.875rem; margin-top: 4px;">{{ $message }}</div>
+                @enderror
+                @endif
+            </div>
+
+            <div style="margin-bottom: 16px;">
+                <label for="edit_email" style="display: block; margin-bottom: 8px; font-weight: 500; color: var(--text);">Email</label>
+                <input type="email" id="edit_email" name="email" value="{{ old('email') }}" required
+                    style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 8px; background: var(--bg); color: var(--text);">
+                @if(old('form_type') == 'edit')
+                @error('email')
+                    <div style="color: #ef4444; font-size: 0.875rem; margin-top: 4px;">{{ $message }}</div>
+                @enderror
+                @endif
+            </div>
+
+            <div style="margin-bottom: 16px;">
+                <label for="edit_role" style="display: block; margin-bottom: 8px; font-weight: 500; color: var(--text);">Role</label>
+                <select id="edit_role" name="role" required
+                    style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 8px; background: var(--bg); color: var(--text);">
+                    <option value="">Pilih Role</option>
+                    <option value="admin" {{ old('role') == 'admin' ? 'selected' : '' }}>Admin</option>
+                    <option value="user" {{ old('role') == 'user' ? 'selected' : '' }}>User</option>
+                </select>
+                @if(old('form_type') == 'edit')
+                @error('role')
+                    <div style="color: #ef4444; font-size: 0.875rem; margin-top: 4px;">{{ $message }}</div>
+                @enderror
+                @endif
+            </div>
+
+            <div style="margin-bottom: 16px;">
+                <label for="edit_password" style="display: block; margin-bottom: 8px; font-weight: 500; color: var(--text);">Password (Opsional)</label>
+                <input type="password" id="edit_password" name="password" placeholder="Kosongkan jika tidak ingin mengubah password"
+                    style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 8px; background: var(--bg); color: var(--text);">
+                @if(old('form_type') == 'edit')
+                @error('password')
+                    <div style="color: #ef4444; font-size: 0.875rem; margin-top: 4px;">{{ $message }}</div>
+                @enderror
+                @endif
+            </div>
+
+            <div style="margin-bottom: 24px;">
+                <label for="edit_password_confirmation" style="display: block; margin-bottom: 8px; font-weight: 500; color: var(--text);">Konfirmasi Password</label>
+                <input type="password" id="edit_password_confirmation" name="password_confirmation" placeholder="Konfirmasi password baru"
+                    style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 8px; background: var(--bg); color: var(--text);">
+            </div>
+
+            <div style="display: flex; gap: 12px; justify-content: flex-end;">
+                <button type="button" onclick="closeEditModal()" style="padding: 10px 20px; border-radius: 8px; border: 1px solid var(--border); background: var(--panel-2); color: var(--text); cursor: pointer;">Batal</button>
+                <button type="submit" style="padding: 10px 20px; border-radius: 8px; border: none; background: var(--primary); color: white; cursor: pointer;">Update User</button>
+            </div>
+        </form>
+    </div>
+</div>
+
 @endsection
+
+@push('scripts')
+<script>
+    function openCreateModal() {
+        document.getElementById('createModal').style.display = 'flex';
+    }
+
+    function closeCreateModal() {
+        document.getElementById('createModal').style.display = 'none';
+    }
+
+    function openEditModal(user) {
+        document.getElementById('editForm').action = "{{ url('users') }}/" + user.id;
+        document.getElementById('edit_user_id').value = user.id;
+        document.getElementById('edit_name').value = user.name;
+        document.getElementById('edit_email').value = user.email;
+        document.getElementById('edit_role').value = user.role;
+        // Reset password fields
+        document.getElementById('edit_password').value = '';
+        document.getElementById('edit_password_confirmation').value = '';
+        
+        document.getElementById('editModal').style.display = 'flex';
+    }
+
+    function closeEditModal() {
+        document.getElementById('editModal').style.display = 'none';
+    }
+
+    // Close modals when clicking outside
+    window.onclick = function(event) {
+        if (event.target == document.getElementById('createModal')) {
+            closeCreateModal();
+        }
+        if (event.target == document.getElementById('editModal')) {
+            closeEditModal();
+        }
+    }
+
+    // Check for validation errors and reopen modal
+    @if($errors->any())
+        @if(old('form_type') == 'create')
+            openCreateModal();
+        @elseif(old('form_type') == 'edit')
+            // Re-set action for edit form based on old user_id
+            document.getElementById('editForm').action = "{{ url('users') }}/" + "{{ old('user_id') }}";
+            document.getElementById('editModal').style.display = 'flex';
+        @endif
+    @endif
+</script>
+@endpush
