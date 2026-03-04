@@ -6,7 +6,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\JadwalController;
 use App\Http\Controllers\InventarisController;
 use App\Http\Controllers\PeminjamanController;
-
+use App\Http\Controllers\RekapPraktikumController;
 use App\Http\Controllers\DashboardController;
 
 Route::get('/', [LoginController::class, 'showLoginForm'])->name('login');
@@ -14,7 +14,23 @@ Route::post('/', [LoginController::class, 'login']);
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
 Route::middleware(['auth'])->group(function () {
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    
+Route::get('/dashboard', [DashboardController::class, 'index'])
+    ->name('dashboard');
+
+Route::get('/rekap-praktikum', [RekapPraktikumController::class, 'index'])
+    ->name('rekap-praktikum.index');
+
+Route::post('/rekap-praktikum/download', 
+    [RekapPraktikumController::class, 'downloadPdf']
+)->name('rekap-praktikum.download');
+
+Route::post('/rekap-praktikum/preview',
+    [RekapPraktikumController::class, 'preview']
+)->name('rekap-praktikum.preview');
+
+
+
 
     // User Management
     Route::resource('users', UserController::class);
@@ -58,5 +74,6 @@ Route::middleware(['auth'])->group(function () {
     // Global Settings (Admin Only)
     Route::get('/settings', [App\Http\Controllers\SettingController::class, 'index'])->name('settings.index');
     Route::put('/settings', [App\Http\Controllers\SettingController::class, 'update'])->name('settings.update');
+
 });
 

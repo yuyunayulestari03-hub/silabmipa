@@ -7,7 +7,7 @@
     <img src="{{ asset($appLogo) }}" alt="Logo" style="max-height: 40px; width: auto;">
     <div class="title">
       <strong>{{ $appName }}</strong>
-      <span>Laboratorium IPA</span>
+      <span>Fakultas Tarbiyah dan Keguruan</span>
     </div>
 
     {{-- tombol close (mobile) --}}
@@ -20,7 +20,8 @@
 
   <nav class="nav">
     <!-- Dashboard -->
-    <a href="{{ url('/') }}" class="{{ request()->is('/') ? 'active' : '' }}">
+    <a href="{{ route('dashboard') }}" 
+   class="{{ request()->routeIs('dashboard') ? 'active' : '' }}">
       <span class="icon">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
           <path d="M11.47 3.841a.75.75 0 0 1 1.06 0l8.632 8.632a.75.75 0 0 1-1.06 1.061l-.375-.375v8.003a2.25 2.25 0 0 1-2.25 2.25H13.5a.75.75 0 0 1-.75-.75V16.5a.75.75 0 0 0-.75-.75h-2.25a.75.75 0 0 0-.75.75v6.162a.75.75 0 0 1-.75.75H4.5a2.25 2.25 0 0 1-2.25-2.25v-8.003l-.375.375a.75.75 0 0 1-1.06-1.061L11.47 3.841Z" />
@@ -39,7 +40,7 @@
           <path fill-rule="evenodd" d="M7.502 6h7.128A3.375 3.375 0 0 1 18 9.375v9.375a3 3 0 0 0 3-3V9.375a3 3 0 0 0-3-3H19.5V5.25C19.5 2.904 17.596 1 15.25 1h-6.5C6.404 1 4.5 2.904 4.5 5.25v13.5c0 1.657 1.343 3 3 3h9.75c1.657 0 3-1.343 3-3V9.375a3.375 3.375 0 0 0-3.375-3.375h-7.128V6Z" clip-rule="evenodd" />
         </svg>
       </span>
-      Jadwal Pratikum
+      Jadwal Praktikum
     </a>
 
     <a href="{{ route('inventaris.index') }}" class="{{ request()->routeIs('inventaris.*') ? 'active' : '' }}">
@@ -72,7 +73,16 @@
         </svg>
       </span>
       Manajemen User
-    </a>
+
+    <a href="{{ route('rekap-praktikum.index') }}"
+   class="{{ request()->routeIs('rekap-praktikum.*') ? 'active' : '' }}">
+    <span class="icon">
+        <i class="fa-solid fa-file-pdf"></i>
+    </span>
+    Laporan Kegiatan
+</a>
+
+
 
     <a href="{{ route('settings.index') }}" class="{{ request()->routeIs('settings.*') ? 'active' : '' }}">
       <span class="icon">

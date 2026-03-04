@@ -75,22 +75,33 @@ class JadwalController extends Controller
     }
 
     public function store(Request $request)
-    {
-        if (auth()->user()->role !== 'admin') {
-            abort(403, 'Unauthorized action.');
-        }
-
-        $request->validate([
-            'kegiatan' => 'required|string|max:255',
-            'tanggal' => 'required|date|after_or_equal:today',
-            'waktu_mulai' => 'required',
-            'waktu_selesai' => 'required',
-        ]);
-
-        JadwalPratikum::create(array_merge($request->all(), ['status' => 'approved', 'user_id' => auth()->id()]));
-
-        return redirect()->route('jadwal.index')->with('success', 'Jadwal berhasil ditambahkan!');
+{
+    if (auth()->user()->role !== 'admin') {
+        abort(403, 'Unauthorized action.');
     }
+
+    $request->validate([
+        'kegiatan' => 'required|string|max:255',
+        'nama_dosen' => 'required|string|max:255',
+        'tanggal' => 'required|date|after_or_equal:today',
+        'waktu_mulai' => 'required',
+        'waktu_selesai' => 'required',
+    ]);
+
+    JadwalPratikum::create([
+        'kegiatan'      => $request->kegiatan,
+        'nama_dosen'    => $request->nama_dosen, // ✅ FIX UTAMA
+        'tanggal'       => $request->tanggal,
+        'waktu_mulai'   => $request->waktu_mulai,
+        'waktu_selesai' => $request->waktu_selesai,
+        'status'        => 'approved',
+        'user_id'       => auth()->id(),
+    ]);
+
+    return redirect()
+        ->route('jadwal.index')
+        ->with('success', 'Jadwal berhasil ditambahkan!');
+}
 
     public function edit($id)
     {

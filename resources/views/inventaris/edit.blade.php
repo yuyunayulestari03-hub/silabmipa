@@ -46,8 +46,24 @@
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
             <div style="margin-bottom: 1rem;">
                 <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Jumlah <span style="color: red;">*</span></label>
-                <input type="number" name="jumlah" class="form-control" style="width: 100%; padding: 0.75rem; border: 1px solid #e2e8f0; border-radius: 6px;" min="0" value="{{ old('jumlah', $inventaris->jumlah) }}" required>
+               <input type="number"
+       name="jumlah_total"
+       min="0"
+       class="form-control"
+       value="{{ old('jumlah_total', $inventaris->jumlah_total) }}"
+       required>
+
             </div>
+            <div>
+    <label>Jumlah Tersedia</label>
+    <input type="number"
+           name="jumlah_tersedia"
+           min="0"
+           class="form-control"
+           value="{{ old('jumlah_tersedia', $inventaris->jumlah_tersedia) }}"
+           required>
+</div>
+
 
             <div style="margin-bottom: 1rem;">
                 <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Satuan <span style="color: red;">*</span></label>

@@ -38,7 +38,7 @@
 @section('content')
 <div class="dashboard-header" style="margin-bottom: 32px;">
     <h1 style="font-size: 1.8rem; font-weight: 700; color: var(--text);">Dashboard Laboratorium</h1>
-    <p style="color: var(--muted);">Selamat datang di Sistem Informasi Peminjaman Laboratorium MIPA.</p>
+    <p style="color: var(--muted);">Selamat datang di Sistem Informasi Laboratorium MIPA.</p>
 </div>
 
 <!-- Welcome Card -->
@@ -64,7 +64,7 @@
             <div style="width: 40px; height: 40px; background: #eff6ff; color: #3b82f6; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
                 <i class="fa-solid fa-calendar-check"></i>
             </div>
-            <span style="color: var(--muted); font-weight: 500;">Total Peminjaman</span>
+            <span style="color: var(--muted); font-weight: 500;">Total Booking Jadwal</span>
         </div>
         <div style="font-size: 1.5rem; font-weight: 700;">{{ $totalPeminjaman }}</div>
         <div style="font-size: 0.875rem; color: var(--muted); margin-top: 4px;">Seluruh Waktu</div>
@@ -133,7 +133,7 @@
             <div style="display: flex; flex-direction: column; gap: 12px;">
                 <a href="{{ route('peminjaman.create') }}" class="btn btn-primary" style="background: var(--primary); color: white; text-decoration: none; padding: 10px 20px; border-radius: 8px; display: flex; align-items: center; gap: 10px; justify-content: center;">
                     <i class="fa-solid fa-plus"></i>
-                    Buat Peminjaman
+                    Ajukan Jadwal
                 </a>
                 @if(auth()->user()->role === 'admin')
                 <a href="{{ route('users.index') }}" class="btn btn-outline" style="border: 1px solid var(--border); color: var(--text); text-decoration: none; padding: 10px 20px; border-radius: 8px; display: flex; align-items: center; gap: 10px; justify-content: center;">
@@ -214,6 +214,7 @@
                             <p style="margin-bottom: 5px;"><i class="fa-regular fa-calendar" style="width: 20px;"></i> <strong>Tanggal:</strong> ${dateStr}</p>
                             <p style="margin-bottom: 5px;"><i class="fa-regular fa-clock" style="width: 20px;"></i> <strong>Waktu:</strong> ${timeStartStr} - ${timeEndStr}</p>
                             <p style="margin-bottom: 5px;"><i class="fa-regular fa-user" style="width: 20px;"></i> <strong>Peminjam:</strong> ${info.event.extendedProps.user}</p>
+                            <i class="fa-solid fa-user-tie" style="width: 20px;"></i><strong>Dosen:</strong> ${info.event.extendedProps.nama_dosen}
                         </div>
                     `,
                     icon: 'info',

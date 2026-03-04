@@ -12,10 +12,12 @@ class JadwalPratikum extends Model
     protected $fillable = [
         'user_id',
         'kegiatan',
+        'nama_dosen',
         'tanggal',
         'waktu_mulai',
         'waktu_selesai',
         'status',
+        'nama_dosen',
     ];
 
     public function user()

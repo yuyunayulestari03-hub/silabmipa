@@ -38,7 +38,7 @@ class SettingController extends Controller
         }
 
         if ($request->hasFile('app_logo')) {
-            $path = $request->file('app_logo')->store('public/settings');
+            $path = $request->file('app_logo')->store('settings');
             // Storage::url($path) usually returns /storage/settings/filename.ext
             // We need to ensure 'public/settings' is accessible via symlink or simple logic
             

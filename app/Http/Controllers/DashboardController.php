@@ -40,6 +40,7 @@ class DashboardController extends Controller
                 'start' => $schedule->tanggal . 'T' . $schedule->waktu_mulai,
                 'end' => $schedule->tanggal . 'T' . $schedule->waktu_selesai,
                 'user' => $schedule->user ? $schedule->user->name : 'Unknown',
+                'nama_dosen' => $schedule->nama_dosen,
             ];
         });
 

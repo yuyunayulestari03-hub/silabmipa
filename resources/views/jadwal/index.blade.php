@@ -4,7 +4,7 @@
 @section('content')
 <div class="dashboard-header" style="margin-bottom: 32px; display: flex; justify-content: space-between; align-items: center;">
     <div>
-        <h1 style="font-size: 1.8rem; font-weight: 700; color: var(--text);">Jadwal Pratikum</h1>
+        <h1 style="font-size: 1.8rem; font-weight: 700; color: var(--text);">Jadwal Praktikum</h1>
         <p style="color: var(--muted);">Jadwal penggunaan Laboratorium MIPA.</p>
     </div>
     <div style="display: flex; gap: 10px;">
@@ -19,7 +19,7 @@
         
         @if(auth()->user()->role === 'user')
         <a href="{{ route('peminjaman.create') }}" class="btn btn-primary" style="background: var(--primary); color: white; padding: 0.75rem 1.5rem; border-radius: 8px; text-decoration: none; font-weight: 500;">
-            Ajukan Peminjaman
+            Ajukan Jadwal
         </a>
         @endif
     </div>
@@ -222,7 +222,7 @@
         {{ $jadwals->links('pagination::bootstrap-4') }}
     </div>
     @else
-    <p style="text-align: center; color: var(--muted); padding: 2rem;">Belum ada jadwal pratikum.</p>
+    <p style="text-align: center; color: var(--muted); padding: 2rem;">Belum ada jadwal praktikum.</p>
     @endif
 </div>
 @endsection
@@ -241,6 +241,10 @@
             <div style="margin-bottom: 1.25rem;">
                 <label style="display: block; margin-bottom: 0.5rem; font-weight: 500; color: var(--text);">Nama Kegiatan</label>
                 <input type="text" name="kegiatan" class="form-control" style="width: 100%; padding: 0.75rem; border: 1px solid #e2e8f0; border-radius: 6px; box-sizing: border-box;" placeholder="Contoh: Pratikum Kimia Dasar" required>
+            </div>
+            <div style="margin-bottom: 1.25rem;">
+                <label style="display: block; margin-bottom: 0.5rem; font-weight: 500; color: var(--text);">Nama Dosen</label>
+                <input type="text" name="nama_dosen" class="form-control" style="width: 100%; padding: 0.75rem; border: 1px solid #e2e8f0; border-radius: 6px; box-sizing: border-box;" placeholder="Contoh: Rita Syafitri, S.Si, M.Pd" required>
             </div>
 
             <div style="margin-bottom: 1.25rem;">

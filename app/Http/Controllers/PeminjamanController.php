@@ -30,6 +30,7 @@ class PeminjamanController extends Controller
     {
         $request->validate([
             'kegiatan' => 'required|string|max:255',
+            'nama_dosen' => 'required|string|max:191',
             'tanggal' => 'required|date',
             'waktu_mulai' => 'required',
             'waktu_selesai' => 'required',
@@ -38,13 +39,14 @@ class PeminjamanController extends Controller
         JadwalPratikum::create([
             'user_id' => auth()->id(),
             'kegiatan' => $request->kegiatan,
+            'nama_dosen' => $request->nama_dosen,
             'tanggal' => $request->tanggal,
             'waktu_mulai' => $request->waktu_mulai,
             'waktu_selesai' => $request->waktu_selesai,
             'status' => 'pending',
         ]);
 
-        return redirect()->route('jadwal.index')->with('success', 'Peminjaman berhasil diajukan! Menunggu persetujuan admin.');
+        return redirect()->route('jadwal.index')->with('success', 'Jadwal berhasil diajukan! Menunggu persetujuan admin.');
     }
 
     public function approve($id)

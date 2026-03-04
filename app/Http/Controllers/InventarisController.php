@@ -31,14 +31,25 @@ class InventarisController extends Controller
             'kode_barang' => 'required|string|unique:inventaris',
             'nama_barang' => 'required|string|max:255',
             'kategori' => 'required|in:alat,bahan',
-            'jumlah' => 'required|integer|min:0',
+            'jumlah_total' => 'required|integer|min:0',
             'satuan' => 'required|string',
             'kondisi' => 'required|in:baik,rusak,habis',
             'lokasi' => 'nullable|string',
             'keterangan' => 'nullable|string',
         ]);
 
-        Inventaris::create($request->all());
+        Inventaris::create([
+    'kode_barang'     => $request->kode_barang,
+    'nama_barang'     => $request->nama_barang,
+    'kategori'        => $request->kategori,
+    'jumlah_total'    => $request->jumlah_total,
+    'jumlah_tersedia' => $request->jumlah_total, // 🔑 PENTING
+    'satuan'          => $request->satuan,
+    'kondisi'         => $request->kondisi,
+    'lokasi'          => $request->lokasi,
+    'keterangan'      => $request->keterangan,
+]);
+
 
         return redirect()->route('inventaris.index')->with('success', 'Data inventaris berhasil ditambahkan!');
     }
@@ -63,7 +74,7 @@ class InventarisController extends Controller
             'kode_barang' => 'required|string|unique:inventaris,kode_barang,' . $id,
             'nama_barang' => 'required|string|max:255',
             'kategori' => 'required|in:alat,bahan',
-            'jumlah' => 'required|integer|min:0',
+            'jumlah_total' => 'required|integer|min:0',
             'satuan' => 'required|string',
             'kondisi' => 'required|in:baik,rusak,habis',
             'lokasi' => 'nullable|string',
@@ -71,33 +82,54 @@ class InventarisController extends Controller
         ]);
 
         $inventaris = Inventaris::findOrFail($id);
-        $inventaris->update($request->all());
+        $inventaris->update([
+    'kode_barang'  => $request->kode_barang,
+    'nama_barang'  => $request->nama_barang,
+    'kategori'     => $request->kategori,
+    'kondisi'      => $request->kondisi,
+    'jumlah_total' => $request->jumlah_total,
+
+    // 🔒 JAGA KONSISTENSI STOK
+    'jumlah_tersedia' => min(
+        $inventaris->jumlah_tersedia,
+        $request->jumlah_total
+    ),
+
+    'satuan'     => $request->satuan,
+    'lokasi'     => $request->lokasi,
+    'keterangan' => $request->keterangan,
+]);
+
 
         return redirect()->route('inventaris.index')->with('success', 'Data inventaris berhasil diperbarui!');
     }
 
     public function updateKondisi(Request $request, $id)
-    {
-        if (auth()->user()->role !== 'admin') {
-            return response()->json(['success' => false, 'message' => 'Unauthorized'], 403);
-        }
-
-        $request->validate([
-            'kondisi' => 'required|in:baik,rusak,habis',
-        ]);
-
-        $inventaris = Inventaris::findOrFail($id);
-        $inventaris->update(['kondisi' => $request->kondisi]);
-
-        // Calculate available amount
-        $jumlahTersedia = $inventaris->kondisi == 'baik' ? $inventaris->jumlah : 0;
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Kondisi berhasil diperbarui!',
-            'jumlah_tersedia' => $jumlahTersedia
-        ]);
+{
+    if (auth()->user()->role !== 'admin') {
+        return response()->json(['success' => false, 'message' => 'Unauthorized'], 403);
     }
+
+    $request->validate([
+        'kondisi' => 'required|in:baik,rusak,habis',
+    ]);
+
+    $inventaris = Inventaris::findOrFail($id);
+
+    $inventaris->update([
+        'kondisi' => $request->kondisi,
+        'jumlah_tersedia' => $request->kondisi === 'baik'
+            ? $inventaris->jumlah_tersedia
+            : 0,
+    ]);
+
+    return response()->json([
+        'success' => true,
+        'message' => 'Kondisi berhasil diperbarui!',
+        'jumlah_tersedia' => $inventaris->jumlah_tersedia
+    ]);
+}
+
 
     public function destroy($id)
     {

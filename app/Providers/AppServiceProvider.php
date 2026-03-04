@@ -27,7 +27,7 @@ class AppServiceProvider extends ServiceProvider
         try {
             $settings = Setting::whereIn('key', ['app_logo', 'app_name'])->pluck('value', 'key');
             
-            $appLogo = $settings['app_logo'] ?? 'backend/img/logo.svg';
+            $appLogo = $settings['app_logo'] ?? 'backend/img/logo_lab.jpg';
             $appName = $settings['app_name'] ?? 'SILAB MIPA';
             
             View::share('appLogo', $appLogo);

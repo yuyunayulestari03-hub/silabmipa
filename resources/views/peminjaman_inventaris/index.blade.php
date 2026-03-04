@@ -3,10 +3,6 @@
 @section('title', 'Daftar Peminjaman Barang')
 
 @section('content')
-<div class="dashboard-header" style="margin-bottom: 32px;">
-    <h1 style="font-size: 1.8rem; font-weight: 700; color: var(--text);">Daftar Peminjaman Barang</h1>
-    <p style="color: var(--muted);">Kelola peminjaman alat dan bahan laboratorium.</p>
-</div>
 
 @if (session('success'))
 <div style="background: #d1fae5; color: #065f46; padding: 1rem; border-radius: 8px; margin-bottom: 2rem;">
@@ -22,7 +18,7 @@
 
 <div class="card" style="background: white; border-radius: 12px; padding: 1.5rem; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
     <div style="margin-bottom: 1.5rem; border-bottom: 1px solid #e5e7eb; padding-bottom: 1rem;">
-        <h2 style="font-size: 1.25rem; font-weight: 600; color: var(--text);">Riwayat Peminjaman</h2>
+        <h2 style="font-size: 1.25rem; font-weight: 600; color: var(--text);">Status Peminjaman</h2>
     </div>
 
     @if($peminjaman->isEmpty())
@@ -95,9 +91,37 @@
                 </tbody>
             </table>
         </div>
-        <div style="margin-top: 1.5rem; display: flex; justify-content: flex-end;">
-            {{ $peminjaman->links('pagination::bootstrap-4') }}
-        </div>
+       @if ($peminjaman->hasPages())
+    <ul class="pagination">
+        
+        @if ($peminjaman->onFirstPage())
+            <li><span>&lsaquo;</span></li>
+        @else
+            <li>
+                <a href="{{ $peminjaman->previousPageUrl() }}">&lsaquo;</a>
+            </li>
+        @endif
+
+        @for ($i = 1; $i <= $peminjaman->lastPage(); $i++)
+            @if ($i == $peminjaman->currentPage())
+                <li class="active"><span>{{ $i }}</span></li>
+            @else
+                <li>
+                    <a href="{{ $peminjaman->url($i) }}">{{ $i }}</a>
+                </li>
+            @endif
+        @endfor
+
+        @if ($peminjaman->hasMorePages())
+            <li>
+                <a href="{{ $peminjaman->nextPageUrl() }}">&rsaquo;</a>
+            </li>
+        @else
+            <li><span>&rsaquo;</span></li>
+        @endif
+
+    </ul>
+@endif
     @endif
 </div>
 @endsection

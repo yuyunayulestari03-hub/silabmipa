@@ -25,7 +25,7 @@
             <thead>
                 <tr style="background-color: #f3f4f6;">
                     <th style="padding: 1rem; text-align: center; color: var(--text); font-weight: 600; border: 1px solid #000;">No</th>
-                    <th style="padding: 1rem; text-align: center; color: var(--text); font-weight: 600; border: 1px solid #000;">Nama Alat</th>
+                    <th style="padding: 1rem; text-align: center; color: var(--text); font-weight: 600; border: 1px solid #000;">Nama Alat dan Bahan</th>
                     <th style="padding: 1rem; text-align: center; color: var(--text); font-weight: 600; border: 1px solid #000;">Jumlah Total</th>
                     <th style="padding: 1rem; text-align: center; color: var(--text); font-weight: 600; border: 1px solid #000;">Jumlah Tersedia</th>
                     <th style="padding: 1rem; text-align: center; color: var(--text); font-weight: 600; border: 1px solid #000;">Kondisi</th>
@@ -35,50 +35,86 @@
             <tbody>
                 @foreach($inventaris as $index => $item)
                 <tr style="border-bottom: 1px solid #000;">
-                    <td style="padding: 1rem; text-align: center; border: 1px solid #000;">{{ $inventaris->firstItem() + $index }}</td>
-                    <td style="padding: 1rem; text-align: center; border: 1px solid #000; font-weight: 500;">{{ $item->nama_barang }}</td>
-                    <td style="padding: 1rem; text-align: center; border: 1px solid #000;">{{ $item->jumlah }}</td>
-                    <td id="jumlah-tersedia-{{ $item->id }}" style="padding: 1rem; text-align: center; border: 1px solid #000;">{{ $item->kondisi == 'baik' ? $item->jumlah : 0 }}</td>
-                    <td style="padding: 1rem; text-align: center; border: 1px solid #000;">
-                        @if(auth()->user()->role === 'admin')
-                        <select onchange="updateKondisi({{ $item->id }}, this.value)" style="padding: 0.25rem 0.5rem; border-radius: 6px; font-size: 0.875rem; border: 1px solid #e5e7eb; width: 100px; text-align: center; cursor: pointer;">
-                            <option value="baik" {{ $item->kondisi == 'baik' ? 'selected' : '' }}>Baik</option>
-                            <option value="rusak" {{ $item->kondisi == 'rusak' ? 'selected' : '' }}>Rusak</option>
-                            <option value="habis" {{ $item->kondisi == 'habis' ? 'selected' : '' }}>Habis</option>
-                        </select>
-                        @else
-                        <span style="display: inline-block; padding: 0.25rem 0.75rem; border-radius: 6px; font-size: 0.875rem; border: 1px solid #e5e7eb; width: 100px; text-align: center; {{ $item->kondisi == 'baik' ? 'background: #fff; color: #000;' : ($item->kondisi == 'rusak' ? 'background: #fff; color: #b91c1c;' : 'background: #fff; color: #374151;') }}">
-                            {{ ucfirst($item->kondisi) }}
-                        </span>
-                        @endif
-                    </td>
-                    <td style="padding: 1rem; text-align: center; border: 1px solid #000;">
-                        @if(auth()->user()->role === 'admin')
-                        <div style="display: flex; justify-content: center; gap: 12px;">
-                            <a href="{{ route('inventaris.edit', $item->id) }}" style="color: #f97316; text-decoration: none; display: inline-flex; align-items: center; justify-content: center;" title="Edit">
-                                <i class="fas fa-cog" style="font-size: 20px;"></i>
-                                <i class="fas fa-pen" style="font-size: 10px; position: absolute; margin-top: 8px; margin-left: 8px; color: #f97316; background: white; border-radius: 50%;"></i>
-                            </a>
-                            
-                            <button type="button" onclick="confirmDelete({{ $item->id }})" style="background: none; border: none; cursor: pointer; color: #ef4444; display: inline-flex; align-items: center; justify-content: center;" title="Hapus">
-                                <i class="fas fa-trash-can" style="font-size: 20px;"></i>
-                            </button>
-                            <form id="delete-form-{{ $item->id }}" action="{{ route('inventaris.destroy', $item->id) }}" method="POST" style="display: none;">
-                                @csrf
-                                @method('DELETE')
-                            </form>
-                        </div>
-                        @else
-                            @if($item->kondisi == 'baik' && $item->jumlah > 0)
-                            <button onclick="openPinjamModal({{ $item->id }}, '{{ $item->nama_barang }}', {{ $item->jumlah }})" class="btn btn-sm btn-primary" style="background: var(--primary); color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer;">
-                                Pinjam
-                            </button>
-                            @else
-                            <span style="color: var(--muted); font-size: 0.8rem;">Tidak Tersedia</span>
-                            @endif
-                        @endif
-                    </td>
-                </tr>
+    {{-- No --}}
+    <td style="padding: 1rem; text-align: center; border: 1px solid #000;">
+        {{ $inventaris->firstItem() + $index }}
+    </td>
+
+    {{-- Nama --}}
+    <td style="padding: 1rem; text-align: center; border: 1px solid #000;">
+        {{ $item->nama_barang }}
+    </td>
+
+    {{-- Jumlah Total --}}
+    <td style="padding: 1rem; text-align: center; border: 1px solid #000;">
+        {{ $item->jumlah_total }}
+    </td>
+
+    {{-- Jumlah Tersedia --}}
+    <td id="jumlah-tersedia-{{ $item->id }}"
+        style="padding: 1rem; text-align: center; border: 1px solid #000;">
+        {{ $item->jumlah_tersedia }}
+    </td>
+
+    {{-- Kondisi --}}
+    <td style="padding: 1rem; text-align: center; border: 1px solid #000;">
+        @if(auth()->user()->role === 'admin')
+            <select onchange="updateKondisi({{ $item->id }}, this.value)">
+                <option value="baik" {{ $item->kondisi === 'baik' ? 'selected' : '' }}>Baik</option>
+                <option value="rusak" {{ $item->kondisi === 'rusak' ? 'selected' : '' }}>Rusak</option>
+                <option value="habis" {{ $item->kondisi === 'habis' ? 'selected' : '' }}>Habis</option>
+            </select>
+        @else
+            {{ ucfirst($item->kondisi) }}
+        @endif
+    </td>
+
+    {{-- Aksi --}}
+   <td style="padding: 1rem; text-align: center; border: 1px solid #000;">
+    @if(auth()->user()->role === 'admin')
+        <div style="display:flex; justify-content:center; gap:14px;">
+            {{-- Edit --}}
+            <a href="{{ route('inventaris.edit', $item->id) }}"
+               title="Edit"
+               style="color:#2563eb; font-size:18px; text-decoration:none;">
+                <i class="fas fa-pen-to-square"></i>
+            </a>
+
+            {{-- Hapus --}}
+            <button type="button"
+                onclick="confirmDelete({{ $item->id }})"
+                title="Hapus"
+                style="background:none; border:none; color:#dc2626; font-size:18px; cursor:pointer;">
+                <i class="fas fa-trash-can"></i>
+            </button>
+
+            <form id="delete-form-{{ $item->id }}"
+                action="{{ route('inventaris.destroy', $item->id) }}"
+                method="POST"
+                style="display:none;">
+                @csrf
+                @method('DELETE')
+            </form>
+        </div>
+    @else
+        @if($item->kondisi === 'baik' && $item->jumlah_tersedia > 0)
+            <button
+                onclick="openPinjamModal(
+                    {{ $item->id }},
+                    '{{ $item->nama_barang }}',
+                    {{ $item->jumlah_tersedia }}
+                )"
+                style="background:var(--primary); color:white; border:none; padding:6px 10px; border-radius:4px;">
+                Pinjam
+            </button>
+        @else
+            <span style="color:#999;">Tidak Tersedia</span>
+        @endif
+    @endif
+</td>
+
+</tr>
+
                 @endforeach
             </tbody>
         </table>
@@ -93,7 +129,18 @@
 
 {{-- Modal Peminjaman --}}
 <div id="pinjamModal" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 50; justify-content: center; align-items: center;">
-    <div style="background: white; border-radius: 12px; padding: 2rem; width: 100%; max-width: 500px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); position: relative;">
+   <div style="
+    background: white;
+    border-radius: 12px;
+    padding: 2rem;
+    width: 100%;
+    max-width: 500px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    position: relative;
+">
+
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
             <h2 style="font-size: 1.5rem; font-weight: 700; color: var(--text);">Pinjam Barang</h2>
             <button onclick="closePinjamModal()" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--muted);">&times;</button>

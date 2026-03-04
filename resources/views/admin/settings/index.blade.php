@@ -29,9 +29,12 @@
             @endif
 
             <input type="file" name="app_logo" accept="image/*" class="form-control" 
-                style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 6px; background: var(--bg);">
-            <p style="color: var(--muted); font-size: 0.8rem; margin-top: 6px;">Format: PNG, JPG, SVG. Maks: 2MB.</p>
-        </div>
+    disabled
+    style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 6px; background: var(--bg); cursor: not-allowed; opacity: 0.6;">
+
+<p style="color: var(--muted); font-size: 0.8rem; margin-top: 6px;">
+    Upload logo dinonaktifkan
+</p>
 
         <div style="display: flex; justify-content: flex-end;">
             <button type="submit" class="btn btn-primary" style="background: var(--primary); color: white; border: none; padding: 10px 24px; border-radius: 6px; font-weight: 600; cursor: pointer;">

@@ -7,13 +7,13 @@
   <link rel="stylesheet" href="{{ asset('backend/css/admin.css') }}" />
   <link rel="stylesheet" href="{{ asset('backend/css/auth.css') }}" />
 </head>
-<body>
+<body style="background:url({{ asset('background_login.jpg') }})">
 
     <div class="login-card">
         <div class="login-header">
             <div style="margin-bottom: 1rem;">
                 <!-- Logo -->
-                <img src="{{ asset($appLogo) }}" alt="Logo" style="max-height: 60px; width: auto;">
+                <img src="{{ asset($appLogo) }}" alt="Logo" style="max-height: 100px; width: auto;">
             </div>
             <h1>Selamat Datang</h1>
             <p>{{ $appName }}</p>
@@ -45,7 +45,7 @@
                 <label for="remember" style="font-size: 0.9rem; color: var(--muted); cursor: pointer; user-select: none;">Ingat saya</label>
             </div>
 
-            <button type="submit" class="btn-login">Masuk ke Dashboard</button>
+            <button type="submit" class="btn-login">Masuk </button>
         </form>
 
         <div class="auth-links">

@@ -35,16 +35,9 @@ class PeminjamanInventarisController extends Controller
 
         $item = Inventaris::findOrFail($request->inventaris_id);
 
-        if ($item->jumlah < $request->jumlah) {
-            return back()->with('error', 'Stok tidak mencukupi.');
-        }
-
-        // Logic: Should we reduce stock immediately or only upon approval?
-        // Usually, we reserve it or check availability. For simplicity here, we check availability but don't reduce until approval,
-        // OR we reduce immediately. Let's stick to "reduce upon approval" logic to avoid phantom bookings, 
-        // BUT for a simple system, reducing on approval is safer.
-        // However, to prevent overbooking while pending, we should probably check "Available = Total - (Borrowed + Pending)".
-        // For now, let's just create the request.
+        if ($item->jumlah_tersedia < $request->jumlah) {
+    return back()->with('error', 'Stok tidak mencukupi.');
+}
 
         PeminjamanInventaris::create([
             'user_id' => auth()->id(),
@@ -73,12 +66,13 @@ class PeminjamanInventarisController extends Controller
                 throw new \Exception('Status peminjaman tidak valid.');
             }
 
-            if ($item->jumlah < $peminjaman->jumlah) {
-                throw new \Exception('Stok barang tidak mencukupi.');
-            }
+            if ($item->jumlah_tersedia < $peminjaman->jumlah) {
+    throw new \Exception('Stok barang tidak mencukupi.');
+}
 
-            // Reduce stock
-            $item->decrement('jumlah', $peminjaman->jumlah);
+// ✅ KURANGI JUMLAH TERSEDIA SAJA
+$item->decrement('jumlah_tersedia', $peminjaman->jumlah);
+
             
             $peminjaman->update(['status' => 'approved']);
         });
@@ -113,7 +107,13 @@ class PeminjamanInventarisController extends Controller
             }
 
             // Return stock
-            $item->increment('jumlah', $peminjaman->jumlah);
+           $item->update([
+    'jumlah_tersedia' => min(
+        $item->jumlah_tersedia + $peminjaman->jumlah,
+        $item->jumlah_total
+    )
+]);
+
             
             $peminjaman->update(['status' => 'returned', 'tanggal_kembali' => now()]);
         });
