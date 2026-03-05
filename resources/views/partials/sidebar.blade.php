@@ -4,7 +4,7 @@
 
 <aside class="sidebar">
   <div class="brand">
-    <img src="{{ asset($appLogo) }}" alt="Logo" style="max-height: 40px; width: auto;">
+    <img src="{{ asset('logouin.png') }}" alt="Logo" style="max-height: 40px; width: auto;">
     <div class="title">
       <strong>{{ $appName }}</strong>
       <span>Fakultas Tarbiyah dan Keguruan</span>
