@@ -24,7 +24,7 @@
             
             @if(isset($settings['app_logo']))
             <div style="margin-bottom: 12px; padding: 10px; border: 1px solid var(--border); border-radius: 6px; display: inline-block; background: var(--bg);">
-                <img src="{{ asset($settings['app_logo']) }}" alt="Current Logo" style="max-height: 80px; width: auto;">
+                <img src="{{ asset('logouin.png') }}" alt="Current Logo" style="max-height: 80px; width: auto;">
             </div>
             @endif
 
