@@ -13,7 +13,7 @@
         <div class="login-header">
             <div style="margin-bottom: 1rem;">
                 <!-- Logo -->
-                <img src="{{ asset($appLogo) }}" alt="Logo" style="max-height: 100px; width: auto;">
+                <img src="{{ asset('logouin.png') }}" alt="Logo" style="max-height: 100px; width: auto;">
             </div>
             <h1>Selamat Datang</h1>
             <p>{{ $appName }}</p>
