@@ -37,6 +37,7 @@ RUN apk add --no-cache \
     zip \
     unzip \
     git \
+    && apk add --no-cache --virtual .build-deps $PHPIZE_DEPS \
     && docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp \
     && docker-php-ext-install -j"$(nproc)" \
         bcmath \
@@ -50,6 +51,7 @@ RUN apk add --no-cache \
         zip \
     && pecl install redis \
     && docker-php-ext-enable redis \
+    && apk del .build-deps \
     && rm -rf /tmp/pear
 
 COPY --from=composer:2 /usr/bin/composer /usr/local/bin/composer
