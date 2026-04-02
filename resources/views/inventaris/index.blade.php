@@ -30,6 +30,7 @@
                     <th style="padding: 1rem; text-align: center; color: var(--text); font-weight: 600; border: 1px solid #000;">Lokasi</th>
                     <th style="padding: 1rem; text-align: center; color: var(--text); font-weight: 600; border: 1px solid #000;">Jumlah Total</th>
                     <th style="padding: 1rem; text-align: center; color: var(--text); font-weight: 600; border: 1px solid #000;">Jumlah Tersedia</th>
+                    <th style="padding: 1rem; text-align: center; color: var(--text); font-weight: 600; border: 1px solid #000;">Satuan</th>
                     <th style="padding: 1rem; text-align: center; color: var(--text); font-weight: 600; border: 1px solid #000;">Kondisi</th>
                     <th style="padding: 1rem; text-align: center; color: var(--text); font-weight: 600; border: 1px solid #000;">Keterangan</th>
                     <th style="padding: 1rem; text-align: center; color: var(--text); font-weight: 600; border: 1px solid #000;">Aksi</th>
@@ -67,6 +68,11 @@
     <td id="jumlah-tersedia-{{ $item->id }}"
         style="padding: 1rem; text-align: center; border: 1px solid #000;">
         {{ $item->jumlah_tersedia }}
+    </td>
+
+    {{-- Satuan --}}
+    <td style="padding:1rem; text-align:center; border:1px solid #000;">
+        {{ $item->satuan }}
     </td>
 
     {{-- Kondisi --}}
