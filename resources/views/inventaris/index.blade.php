@@ -25,10 +25,13 @@
             <thead>
                 <tr style="background-color: #f3f4f6;">
                     <th style="padding: 1rem; text-align: center; color: var(--text); font-weight: 600; border: 1px solid #000;">No</th>
+                    <th style="padding: 1rem; text-align: center; color: var(--text); font-weight: 600; border: 1px solid #000;">Kode</th>
                     <th style="padding: 1rem; text-align: center; color: var(--text); font-weight: 600; border: 1px solid #000;">Nama Alat dan Bahan</th>
+                    <th style="padding: 1rem; text-align: center; color: var(--text); font-weight: 600; border: 1px solid #000;">Lokasi</th>
                     <th style="padding: 1rem; text-align: center; color: var(--text); font-weight: 600; border: 1px solid #000;">Jumlah Total</th>
                     <th style="padding: 1rem; text-align: center; color: var(--text); font-weight: 600; border: 1px solid #000;">Jumlah Tersedia</th>
                     <th style="padding: 1rem; text-align: center; color: var(--text); font-weight: 600; border: 1px solid #000;">Kondisi</th>
+                    <th style="padding: 1rem; text-align: center; color: var(--text); font-weight: 600; border: 1px solid #000;">Keterangan</th>
                     <th style="padding: 1rem; text-align: center; color: var(--text); font-weight: 600; border: 1px solid #000;">Aksi</th>
                 </tr>
             </thead>
@@ -40,9 +43,19 @@
         {{ $inventaris->firstItem() + $index }}
     </td>
 
+    {{-- Kode --}}
+    <td style="padding:1rem; text-align:center; border:1px solid #000;">
+        {{ $item->kode_barang }}
+    </td>
+
     {{-- Nama --}}
     <td style="padding: 1rem; text-align: center; border: 1px solid #000;">
         {{ $item->nama_barang }}
+    </td>
+
+    {{-- Lokasi --}}
+    <td style="padding:1rem; text-align:center; border:1px solid #000;">
+        {{ $item->lokasi }}
     </td>
 
     {{-- Jumlah Total --}}
@@ -67,6 +80,11 @@
         @else
             {{ ucfirst($item->kondisi) }}
         @endif
+    </td>
+
+    {{-- Keterangan --}}
+    <td style="padding:1rem; text-align:center; border:1px solid #000;">
+        {{ $item->keterangan }}
     </td>
 
     {{-- Aksi --}}
